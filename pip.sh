@@ -10,6 +10,7 @@ PACKAGES=(
 	pyright
 	black
 	tombi
+	visidata
 )
 
 if [ ! -x "$VENV/bin/python" ]; then
