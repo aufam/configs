@@ -59,19 +59,19 @@ M.treesitter = {
 
 M.gitsigns = {
 	signs = {
-		add = { text = "" }, -- unstaged add
-		change = { text = "" }, -- unstaged change
-		delete = { text = "" }, -- unstaged delete
-		topdelete = { text = "󰐊" },
-		changedelete = { text = "󰍴" },
-		untracked = { text = "" },
+		add = { text = "┃" },
+		change = { text = "┃" },
+		delete = { text = "━" },
+		topdelete = { text = "━" },
+		changedelete = { text = "╋" },
+		untracked = { text = "┃" },
 	},
 	signs_staged = {
-		add = { text = "" }, -- staged add (check-square)
-		change = { text = "" }, -- staged change (note)
-		delete = { text = "" }, -- staged delete (minus-square)
-		topdelete = { text = "󰘚" }, -- staged top delete
-		changedelete = { text = "󱗜" }, -- staged change + delete
+		add = { text = "║" },
+		change = { text = "║" },
+		delete = { text = "═" },
+		topdelete = { text = "═" },
+		changedelete = { text = "╬" },
 	},
 	preview_config = {
 		relative = "cursor",
