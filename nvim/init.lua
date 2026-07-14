@@ -1,10 +1,16 @@
-vim.g.transparent_background = vim.env.VIM_TRANSPARENT
-
-vim.lsp.set_log_level("ERROR")
-require("config.vim")
+local transparent = (vim.env.VIM_TRANSPARENT or ""):lower()
+vim.g.transparent_background = transparent == "1" or transparent == "true" or transparent == "on"
 
 local version = vim.version()
 local no_lazy = vim.env.NO_LAZY
+
+require("config.vim")
+
+if version.major > 0 or version.minor >= 12 then
+	vim.lsp.log.set_level("ERROR")
+else
+	vim.lsp.set_log_level("ERROR")
+end
 
 if (version.major > 0 or version.minor >= 10) and not no_lazy then
 	require("config.lazy")

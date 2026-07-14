@@ -2,7 +2,22 @@ return {
 	"rose-pine/neovim",
 	name = "rose-pine",
 	config = function()
+		-- NOTE: Highlight groups are extended (merged) by default. Disable this
+		-- per group via `inherit = false`
+		local highlight_groups = vim.g.transparent_background
+				and {
+					WinBar = { bg = "NONE" },
+					WinBarNC = { bg = "NONE" },
+					-- Comment = { fg = "foam" },
+					-- StatusLine = { fg = "love", bg = "love", blend = 15 },
+					-- VertSplit = { fg = "muted", bg = "muted" },
+					-- Visual = { fg = "base", bg = "text", inherit = false },
+				}
+			or {}
+
 		require("rose-pine").setup({
+			highlight_groups = highlight_groups,
+
 			variant = "auto", -- auto, main, moon, or dawn
 			dark_variant = "main", -- main, moon, or dawn
 			dim_inactive_windows = false,
@@ -57,17 +72,6 @@ return {
 				--     base = '#18191a',
 				--     overlay = '#363738',
 				-- },
-			},
-
-			-- NOTE: Highlight groups are extended (merged) by default. Disable this
-			-- per group via `inherit = false`
-			highlight_groups = {
-				WinBar = { bg = "NONE" },
-				WinBarNC = { bg = "NONE" },
-				-- Comment = { fg = "foam" },
-				-- StatusLine = { fg = "love", bg = "love", blend = 15 },
-				-- VertSplit = { fg = "muted", bg = "muted" },
-				-- Visual = { fg = "base", bg = "text", inherit = false },
 			},
 
 			before_highlight = function(group, highlight, palette)

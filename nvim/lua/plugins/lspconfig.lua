@@ -170,15 +170,6 @@ local settings = {
 		enable_inlay_hints = true,
 		warn_style = true,
 	},
-	neocmake = {
-		format = {
-			enable = true,
-		},
-		lint = {
-			enable = true,
-		},
-		line_max_words = 120,
-	},
 }
 
 return {
@@ -239,7 +230,6 @@ return {
 			"cssls",
 			"docker_compose_language_service",
 			"gitlab_ci_ls",
-			"neocmake",
 		}
 
 		-- lsp only
@@ -259,8 +249,33 @@ return {
 			})
 		end
 
+		vim.lsp.config("neocmake", {
+			cmd = { "neocmakelsp", "stdio" },
+			filetypes = { "cmake" },
+			root_markers = {
+				"CMakePresets.json",
+				"CMakeLists.txt",
+				".git",
+			},
+			single_file_support = true, -- suggested
+			on_attach = function(client, bufnr)
+				enable_formatter(augroup, client, bufnr)
+				on_attach(client, bufnr)
+			end,
+			init_options = {
+				format = {
+					enable = true,
+				},
+				lint = {
+					enable = true,
+				},
+				scan_cmake_in_package = false, -- default is true
+				line_max_words = 120,
+			},
+		})
+
 		-- enable all
-		local total = { "clangd" }
+		local total = { "clangd", "neocmake" }
 		vim.list_extend(total, lsps)
 		vim.list_extend(total, lsp_and_formatters)
 		for _, server in ipairs(total) do

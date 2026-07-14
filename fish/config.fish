@@ -139,6 +139,56 @@ function qwen
         | jq -r '.response // .error'
 end
 
+function gemma
+    argparse 'f/file=' 'x/xclip' 'v/verbose' 'l/long' -- $argv
+    or return
+
+    if set -q _flag_long
+        set system_prompt ""
+    else
+        set system_prompt "Answer shortly."
+    end
+
+    set prompt "$argv"
+    if test (count $argv) -eq 0; and not isatty stdin
+        while read line
+            set prompt "$prompt\n$line"
+        end
+    end
+
+    if set -q _flag_file
+        if test -f $_flag_file
+            set prompt "$prompt\n"(cat $_flag_file)
+        else
+            echo "Error: File '$_flag_file' not found."
+            return 1
+        end
+    end
+
+    if set -q _flag_xclip
+        set prompt "$prompt\n"(xclip -selection clipboard -o)
+    end
+
+    set system_json (printf "%s" "$system_prompt" | jq -Rsa .)
+    set prompt_json (printf "%s" "$prompt" | jq -Rsa .)
+
+    if set -q _flag_verbose
+        printf "prompt:\n%s\n\n" "$prompt"
+        printf "response:\n"
+    end
+
+    curl -s http://localhost:11434/v1/chat/completions \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"model\": \"gemma3:1b\",
+            \"messages\": [
+                {\"role\": \"system\", \"content\": $system_json},
+                {\"role\": \"user\", \"content\": $prompt_json}
+            ]
+        }" \
+        | jq -r '.choices[0].message.content // .error.message'
+end
+
 function commit
     argparse 'l/long' 'c/context=' -- $argv
     or return

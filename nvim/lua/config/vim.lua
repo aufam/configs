@@ -170,12 +170,6 @@ if version.major > 0 or version.minor >= 10 then
 		config.border = "rounded"
 		return vim.lsp.handlers.hover(_, result, ctx, config)
 	end
-
-	vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
-		config = config or {}
-		config.border = "rounded"
-		return vim.lsp.handlers.signature_help(_, result, ctx, config)
-	end
 else
 	vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
 	vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })

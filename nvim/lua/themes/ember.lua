@@ -11,7 +11,7 @@ return {
 				functions = {},
 				types = { bold = true },
 			},
-			transparent = true, -- transparent editor background
+			transparent = vim.g.transparent_background, -- transparent editor background
 			transparent_floats = nil, -- follows `transparent` by default; set explicitly to override
 			dark_variant = "ember", -- used by `ember-auto` when background = "dark"
 			light_variant = "ember-light", -- used by `ember-auto` when background = "light"
