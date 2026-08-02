@@ -2,11 +2,17 @@
 
 import subprocess
 import sys
+import platform
+
+if platform.system() == "Darwin":
+    TMUX = "/opt/homebrew/bin/tmux"
+else:
+    TMUX = "tmux"
 
 
 def get_sessions() -> list[tuple[str, bool]]:
     try:
-        output: str = subprocess.check_output(["tmux", "list-sessions"], text=True)
+        output: str = subprocess.check_output([TMUX, "list-sessions"], text=True)
         return [
             (line.split(":")[0], "(attached)" in line)
             for line in output.strip().splitlines()
@@ -38,7 +44,7 @@ def switch_relative(sessions: list[tuple[str, bool]], direction: int):
     target_idx = (current_idx + direction) % len(sessions)
     target_session = sessions[target_idx][0]
 
-    subprocess.run(["tmux", "switch-client", "-t", target_session])
+    subprocess.run([TMUX, "switch-client", "-t", target_session])
 
 
 def main():

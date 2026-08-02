@@ -2,6 +2,12 @@
 
 import subprocess
 import sys
+import platform
+
+if platform.system() == "Darwin":
+    TMUX = "/opt/homebrew/bin/tmux"
+else:
+    TMUX = "tmux"
 
 # Map process names to icons
 PROCESS_ICONS = {
@@ -26,7 +32,15 @@ CMD_BLACKLIST = {"[fish]", "ps"}
 def get_pane_pids(window_id: str) -> list[str]:
     try:
         output: str = subprocess.check_output(
-            ["tmux", "list-panes", "-F", "#{pane_pid}", "-t", window_id], text=True
+            [
+                TMUX,
+                "list-panes",
+                "-F",
+                "#{pane_pid}",
+                "-t",
+                window_id,
+            ],
+            text=True,
         )
         return [line.strip() for line in output.strip().splitlines()]
     except subprocess.CalledProcessError:
@@ -35,21 +49,34 @@ def get_pane_pids(window_id: str) -> list[str]:
 
 def get_child_cmds(ppid: str) -> list[str]:
     try:
-        output: str = subprocess.check_output(
-            ["ps", "-o", "cmd=", "--ppid", ppid], text=True
-        )
-
-        cmds = []
-        for line in output.strip().splitlines():
-            parts = line.strip().split()
-            if parts:
-                cmd = parts[0]
-                if cmd not in CMD_BLACKLIST:
-                    cmds.append(cmd)
-
-        return cmds
+        child_pids = subprocess.check_output(
+            ["pgrep", "-P", ppid],
+            text=True,
+        ).split()
     except subprocess.CalledProcessError:
         return []
+
+    cmds = []
+
+    for pid in child_pids:
+        try:
+            command = subprocess.check_output(
+                ["ps", "-p", pid, "-o", "command="],
+                text=True,
+            ).strip()
+        except subprocess.CalledProcessError:
+            # Child exited between pgrep and ps.
+            continue
+
+        if not command:
+            continue
+
+        cmd = command.split(maxsplit=1)[0]
+
+        if cmd not in CMD_BLACKLIST:
+            cmds.append(cmd)
+
+    return cmds
 
 
 def main():

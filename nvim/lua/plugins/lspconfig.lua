@@ -95,6 +95,45 @@ local function progress(client_id, token, value)
 	end)
 end
 
+local function run(title, cmd, client, token)
+	progress(client.id, token, {
+		kind = "begin",
+		title = title,
+		message = "Running...",
+	})
+
+	local function on_output(_, data)
+		if not data then
+			return
+		end
+
+		for _, line in ipairs(data) do
+			line = vim.trim(line)
+			if line ~= "" then
+				progress(client.id, token, {
+					kind = "report",
+					message = line,
+				})
+			end
+		end
+	end
+
+	vim.fn.jobstart(cmd, {
+		stdout_buffered = false,
+		stderr_buffered = false,
+
+		on_stdout = on_output,
+		on_stderr = on_output,
+
+		on_exit = function(_, code)
+			progress(client.id, token, {
+				kind = "end",
+				message = code == 0 and "Done" or ("Failed (" .. code .. ")"),
+			})
+		end,
+	})
+end
+
 local function carton_configure(cmake_dir)
 	local token = "carton-configure"
 	local client = vim.lsp.get_clients({ name = "clangd" })[1]
@@ -103,49 +142,15 @@ local function carton_configure(cmake_dir)
 		return
 	end
 
-	local function run(title, cmd)
-		progress(client.id, token, {
-			kind = "begin",
-			title = title,
-			message = "Running...",
-		})
-
-		local function on_output(_, data)
-			if not data then
-				return
-			end
-
-			for _, line in ipairs(data) do
-				line = vim.trim(line)
-				if line ~= "" then
-					progress(client.id, token, {
-						kind = "report",
-						message = line,
-					})
-				end
-			end
-		end
-
-		vim.fn.jobstart(cmd, {
-			stdout_buffered = false,
-			stderr_buffered = false,
-
-			on_stdout = on_output,
-			on_stderr = on_output,
-
-			on_exit = function(_, code)
-				progress(client.id, token, {
-					kind = "end",
-					message = code == 0 and "Done" or ("Failed (" .. code .. ")"),
-				})
-			end,
-		})
-	end
-
 	if vim.fn.filereadable("carton.toml") == 1 then
-		run("carton configure", { "carton" })
+		run("carton configure", { "carton" }, client, token)
 	elseif cmake_dir ~= nil then
-		run("cmake configure", { "sh", "-c", ("cmake -B %s && cmake --build %s"):format(cmake_dir, cmake_dir) })
+		run(
+			"cmake configure",
+			{ "sh", "-c", ("cmake -B %s && cmake --build %s"):format(cmake_dir, cmake_dir) },
+			client,
+			token
+		)
 	else
 		vim.notify("carton.toml is missing", vim.log.levels.ERROR, { title = token })
 	end
@@ -192,15 +197,16 @@ return {
 				Filetypes = { "c", "cpp" },
 				cmd = {
 					"clangd",
-					"--background-index", -- keep this
-					"--all-scopes-completion", -- 🔥 improves symbol resolution
+					"--background-index",
+					"--all-scopes-completion",
 					"--completion-style=detailed",
-					"--clang-tidy",
+					"--clang-tidy=false",
 					"--header-insertion=never",
 					"--header-insertion-decorators=false",
-					"--pch-storage=memory", -- faster preamble reuse
-					"--limit-results=0", -- no truncation of results
-					"--j=8", -- 🔥 use ALL cores (important),
+					"--pch-storage=memory",
+					"--limit-results=200",
+					"--experimental-modules-support=false",
+					"--j=8",
 					"--compile-commands-dir=" .. compile_commands_dir,
 				},
 			})

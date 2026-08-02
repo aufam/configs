@@ -35,4 +35,4 @@ install_all_of vim fish tmux ranger jq ueberzug
 # Better tools
 install_one_of eza exa
 install_one_of btop htop
-install_all_of fzf bat
+install_all_of fzf bat fd-find ripgrep

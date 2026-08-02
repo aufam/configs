@@ -25,6 +25,8 @@ if type -q bat;     alias cat "bat -p"; end
 if type -q batcat;  alias bat batcat; alias cat "batcat -p"; end
 if type -q fd-find; alias fd fd-find; end
 
+if test (uname) = Linux; alias mpv "mpv --vo=x11"; end
+
 if type -q eza
     alias ls 'eza -g --group-directories-first'
     alias la 'eza -ga --group-directories-first'

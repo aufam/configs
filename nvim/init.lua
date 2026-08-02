@@ -7,14 +7,14 @@ local no_lazy = vim.env.NO_LAZY
 require("config.vim")
 
 if version.major > 0 or version.minor >= 12 then
-	vim.lsp.log.set_level("ERROR")
+	vim.lsp.log.set_level("OFF")
 else
-	vim.lsp.set_log_level("ERROR")
+	vim.lsp.set_log_level("OFF")
 end
 
 if (version.major > 0 or version.minor >= 10) and not no_lazy then
 	require("config.lazy")
-	vim.cmd.colorscheme("koda")
+	vim.cmd.colorscheme("koda-moss")
 else
 	require("config.nolazy")
 	vim.notify(

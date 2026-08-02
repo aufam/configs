@@ -14,7 +14,7 @@ return {
 			-- Common use case would be to set either `italic = true` or `bold = true` for a desired group
 			-- See `:help nvim_set_hl` for more valid values
 			styles = {
-				functions = { bold = true },
+				functions = { bold = true, italic = true },
 				keywords = { bold = false, italic = true },
 				comments = { italic = true },
 				strings = { italic = true },
@@ -24,9 +24,10 @@ return {
 			-- Override colors for the active variant
 			-- Available keys (e.g., 'func') can be found in lua/koda/palette/
 			colors = {
-				operator = "#95cb82",
-				keyword = "#d9ba73",
+				-- operator = "#95cb82",
+				-- keyword = "#d9ba73",
 				-- func = "#FFFFFF",
+				type = "#FFFFFF",
 			},
 
 			-- You can modify or extend highlight groups using the `on_highlights` configuration option
