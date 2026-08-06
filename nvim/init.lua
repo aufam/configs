@@ -14,7 +14,7 @@ end
 
 if (version.major > 0 or version.minor >= 10) and not no_lazy then
 	require("config.lazy")
-	vim.cmd.colorscheme("koda-moss")
+	vim.cmd.colorscheme("kintsugi-flared")
 else
 	require("config.nolazy")
 	vim.notify(

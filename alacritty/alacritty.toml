@@ -2,8 +2,8 @@
 
 [general]
 import = [
-    "~/.config/alacritty/fonts/space.toml",
-    "~/.config/alacritty/themes/google.toml"
+    "~/.config/alacritty/fonts/ioskeley.toml",
+    "~/.config/alacritty/themes/kintsugi.toml"
 ]
 
 [terminal.shell]

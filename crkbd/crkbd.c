@@ -140,6 +140,8 @@ bool oled_task_user(void) {
     if (w) {
         oled_set_cursor(0, 0);
         switch (get_highest_layer(layer_state)) {
+            case 0:
+                break;
             case 1:
                 oled_write_P(PSTR("COLEMAK"), false);
                 break;
@@ -152,7 +154,11 @@ bool oled_task_user(void) {
             case 4:
                 oled_write_P(PSTR("4"), false);
                 break;
+            case 5:
+                oled_write_P(PSTR("5"), false);
+                break;
             default:
+                oled_write_P(PSTR("-"), false);
                 break;
         }
     }

@@ -66,3 +66,14 @@ if [ ! -f $FONTS/zed-mono-extendedmedium.ttf ]; then
 	mv backup-3.ttf zed-mono-extendedextrabold.ttf
 	mv backup-4.ttf zed-mono-extendedextrabolditalic.ttf
 fi
+
+if [ ! -f $FONTS/IoskeleyMonoNerdFont-Regular.ttf ]; then
+	wget -P $FONTS -nc 'https://github.com/ahatem/IoskeleyMono/releases/download/v2.0.0/IoskeleyMono-NerdFont.zip'
+	cd $FONTS
+	unzip 'IoskeleyMono-NerdFont.zip'
+	mv Normal/IoskeleyMonoNerdFont-Regular.ttf .
+	mv Normal/IoskeleyMonoNerdFont-Italic.ttf .
+	mv Normal/IoskeleyMonoNerdFont-Bold.ttf .
+	mv Normal/IoskeleyMonoNerdFont-BoldItalic.ttf .
+	rm -rf 'IoskeleyMono-NerdFont.zip' 'Condensed/' 'Normal/' 'SemiCondensed/'
+fi

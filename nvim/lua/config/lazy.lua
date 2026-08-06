@@ -30,4 +30,8 @@ require("lazy").setup({
 		colorscheme = { "habamax" },
 	},
 	checker = { enabled = true },
+	rocks = {
+		enabled = false,
+		hererocks = false,
+	},
 })

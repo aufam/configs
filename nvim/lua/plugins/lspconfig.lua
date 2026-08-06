@@ -203,10 +203,12 @@ return {
 					"--clang-tidy=false",
 					"--header-insertion=never",
 					"--header-insertion-decorators=false",
+					"--function-arg-placeholders=false",
 					"--pch-storage=memory",
 					"--limit-results=200",
-					"--experimental-modules-support=false",
 					"--j=8",
+					"--log=error",
+					"--experimental-modules-support=false",
 					"--compile-commands-dir=" .. compile_commands_dir,
 				},
 			})
